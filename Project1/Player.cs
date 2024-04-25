@@ -39,7 +39,7 @@ namespace Project1
 
             float changeY = 0;
             changeY += 5;
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.W))
                 changeY -= 10;
             position.Y += changeY;
 

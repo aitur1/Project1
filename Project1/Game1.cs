@@ -15,6 +15,7 @@
             AnimationManager am;
 
             Player player;
+            Enemy enemy;
             Texture2D playerTexture;
 
             public Game1()
@@ -43,21 +44,24 @@
             // TODO: use this.Content to load your game content here
             sprites = new();
 
-            //Texture2D playerTexture = Content.Load<Texture2D>("catrun");
-            Texture2D bgTexture = Content.Load<Texture2D>("background");
+            Texture2D platformTexture = Content.Load<Texture2D>("platform1");
             Texture2D enemyTexture = Content.Load<Texture2D>("dogx4");
+            Texture2D playerTexture = Content.Load<Texture2D>("catx4");
 
-            sprites.Add(new Sprite(bgTexture, new Vector2(0, 0)));
+            sprites.Add(new Sprite(platformTexture, new Vector2(0, 1000)));
+            sprites.Add(new Sprite(platformTexture, new Vector2(230, 1000)));
+            sprites.Add(new Sprite(platformTexture, new Vector2(460, 1000)));
+            sprites.Add(new Sprite(platformTexture, new Vector2(690, 1000)));
 
-            sprites.Add(new Sprite(enemyTexture, new Vector2(100, 100)));
-            sprites.Add(new Sprite(enemyTexture, new Vector2(400, 200)));
-            sprites.Add(new Sprite(enemyTexture, new Vector2(100, 300)));
+            sprites.Add(new Enemy(enemyTexture, new Vector2(100, 960)));
+            sprites.Add(new Enemy(enemyTexture, new Vector2(400, 960)));
+            sprites.Add(new Enemy(enemyTexture, new Vector2(250, 960)));
 
-            //player = new Player(playerTexture, new Vector2(200, 200), sprites);
-            //sprites.Add(player);
+            player = new Player(playerTexture, new Vector2(500, 940), sprites);
+            sprites.Add(player);
 
-            am = new(6, 6, new Vector2(92, 64));
-            playerTexture = Content.Load<Texture2D>("catrun");
+            //am = new(6, 6, new Vector2(92, 64));
+            //playerTexture = Content.Load<Texture2D>("catrun");
         }
 
         protected override void Update(GameTime gameTime)
@@ -66,28 +70,25 @@
                 Exit();
 
             // TODO: Add your update logic here
-            //List<Sprite> killList = new();
-            //foreach (var sprite in sprites)
-            //{
-            //    sprite.Update(gameTime);
 
-            //    if (sprite.Rect.Intersects(player.Rect))
-            //    {
-            //        killList.Add(sprite);
-            //    }
-            //}
-
-            //foreach (var sprite in killList)
-            //{
-            //    sprites.Remove(sprite);
-            //}
-
+            List<Sprite> killList = new List<Sprite>();
             foreach (var sprite in sprites)
             {
                 sprite.Update(gameTime);
+                if (sprite != player && sprite.Rect.Intersects(player.Rect))
+                {
+                    if (sprite is Enemy)
+                        killList.Add(player);
+                    player.OnCollision(sprite);
+                }
             }
 
-            am.Update();
+            foreach (var sprite in killList)
+            {
+                sprites.Remove(sprite);
+            }
+
+            //am.Update();
 
             base.Update(gameTime);
         }
@@ -104,11 +105,11 @@
                 sprite.Draw(_spriteBatch);
             }
 
-            _spriteBatch.Draw(
-                playerTexture,
-                new Rectangle(100, 100, 100, 100),
-                am.GetFrame(),
-                Color.White);
+            //_spriteBatch.Draw(
+            //    playerTexture,
+            //    new Rectangle(100, 100, 100, 100),
+            //    am.GetFrame(),
+            //    Color.White);
 
             _spriteBatch.End();
 

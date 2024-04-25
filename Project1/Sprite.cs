@@ -10,6 +10,7 @@ namespace Project1
 {
     internal class Sprite
     {
+        public bool IsRemoved { get; set; } = false;
         private static readonly float scale = 1f;
 
         public Texture2D texture;
@@ -35,6 +36,10 @@ namespace Project1
         public virtual void Draw(SpriteBatch spriteBatch) 
         { 
             spriteBatch.Draw(texture, position, Color.White);
+        }
+
+        public virtual void OnCollision(Sprite otherSprite)
+        {
         }
     }
 }

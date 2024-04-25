@@ -1,20 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project1
 {
     internal class Player : Sprite
     {
-        List<Sprite> collisionGroup;
+        private List<Sprite> collisionGroup;
+        private bool isJumping = false;
+        private float jumpSpeed = 10f;
+        private float gravity = 0.5f;
 
-        public Player(Texture2D texture, Vector2 position, List<Sprite> collisionGroup) : base(texture, position) 
-        { 
+        public Player(Texture2D texture, Vector2 position, List<Sprite> collisionGroup) : base(texture, position)
+        {
             this.collisionGroup = collisionGroup;
         }
 
@@ -37,19 +36,43 @@ namespace Project1
                 }
             }
 
-            float changeY = 0;
-            changeY += 5;
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.W))
-                changeY -= 10;
-            position.Y += changeY;
-
-            foreach (var sprite in collisionGroup)
+            if (!isJumping && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.W)))
             {
-                if (sprite != this && sprite.Rect.Intersects(Rect))
+                isJumping = true;
+                jumpSpeed = 10f;
+            }
+
+            if (isJumping || !IsOnPlatform())
+            {
+                position.Y -= jumpSpeed;
+                jumpSpeed -= gravity;
+
+                foreach (var sprite in collisionGroup)
                 {
-                    position.Y -= changeY;
+                    if (sprite != this && sprite.Rect.Intersects(Rect))
+                    {
+                        position.Y += jumpSpeed;
+                        isJumping = false;
+                        jumpSpeed = 0;
+                        break;
+                    }
                 }
             }
+            else
+            {
+                isJumping = false;
+                jumpSpeed = 0;
+            }
+        }
+
+        private bool IsOnPlatform()
+        {
+            foreach (var sprite in collisionGroup)
+            {
+                if (sprite != this && sprite.Rect.Intersects(Rect) && sprite is Sprite && sprite != this)
+                    return true;
+            }
+            return false;
         }
     }
 }

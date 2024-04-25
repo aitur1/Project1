@@ -1,32 +1,33 @@
-﻿    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Content;
-    using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
-    using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
-    namespace Project1
+namespace Project1
+{
+    public class Game1 : Game
     {
-        public class Game1 : Game
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+
+        List<Sprite> sprites;
+        AnimationManager am;
+
+        Player player;
+        Enemy enemy;
+
+        Texture2D playerTexture;
+
+        public Game1()
         {
-            private GraphicsDeviceManager _graphics;
-            private SpriteBatch _spriteBatch;
-
-            List<Sprite> sprites;
-            AnimationManager am;
-
-            Player player;
-            Enemy enemy;
-            Texture2D playerTexture;
-
-            public Game1()
-            {
-                _graphics = new GraphicsDeviceManager(this);
-                //_graphics.IsFullScreen = true;
-                _graphics.PreferredBackBufferWidth = 1920;
-                _graphics.PreferredBackBufferHeight = 1080;
-                Content.RootDirectory = "Content";
-                IsMouseVisible = true;
-            }
+            _graphics = new GraphicsDeviceManager(this);
+            //_graphics.IsFullScreen = true;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+        }
 
         protected override void Initialize()
         {
@@ -57,11 +58,11 @@
             sprites.Add(new Enemy(enemyTexture, new Vector2(400, 960)));
             sprites.Add(new Enemy(enemyTexture, new Vector2(250, 960)));
 
-            player = new Player(playerTexture, new Vector2(500, 940), sprites);
+            player = new Player(playerTexture, new Vector2(500, 840), sprites);
             sprites.Add(player);
 
+
             //am = new(6, 6, new Vector2(92, 64));
-            //playerTexture = Content.Load<Texture2D>("catrun");
         }
 
         protected override void Update(GameTime gameTime)
@@ -87,6 +88,7 @@
             {
                 sprites.Remove(sprite);
             }
+
 
             //am.Update();
 

@@ -63,6 +63,15 @@ namespace Project1
                 isJumping = false;
                 jumpSpeed = 0;
             }
+
+
+            foreach (var sprite in collisionGroup)
+            {
+                if (sprite is Coin coin && coin != null && !coin.IsCollected && Rect.Intersects(coin.Rect))
+                {
+                    coin.Collect();
+                }
+            }
         }
 
         private bool IsOnPlatform()

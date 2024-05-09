@@ -9,6 +9,7 @@ namespace Project1.Levels
         private List<Sprite> sprites;
         public Player player { get; private set; }
         private int coinsCollected = 0;
+        Game1 game;
 
         public bool PlayerTouchesRightEdge(GraphicsDevice graphicsDevice)
         {
@@ -28,16 +29,17 @@ namespace Project1.Levels
         {
             sprites = new List<Sprite>();
 
+
             // Create platform sprites
-            sprites.Add(new Sprite(platformTexture, new Vector2(0, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(230, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(460, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(690, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(890, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(1090, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(1290, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(1490, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(1690, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(0, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(230, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(460, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(690, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(890, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(1090, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(1290, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(1490, 1000)));
+            sprites.Add(new Platform(platformTexture, new Vector2(1690, 1000)));
 
             // Create enemy sprites
             sprites.Add(new Enemy(enemyTexture, new Vector2(100, 960)));
@@ -45,7 +47,7 @@ namespace Project1.Levels
             sprites.Add(new Enemy(enemyTexture, new Vector2(250, 960)));
 
             // Create player sprite
-            sprites.Add(new Player(playerTexture, new Vector2(500, 840), sprites));
+            sprites.Add(new Player(playerTexture, new Vector2(500, 840), sprites ));
 
             sprites.Add(new Coin(coinTexture, new Vector2(500, 930)));
 
@@ -53,11 +55,28 @@ namespace Project1.Levels
 
         public void Update(GameTime gameTime)
         {
+            var spritesToRemove = new List<Sprite>(); // Создаем список для хранения объектов, которые нужно удалить
+
             foreach (var sprite in sprites)
             {
-                sprite.Update(gameTime);
+                if (sprite is Coin coin && coin.IsCollected)
+                {
+                    spritesToRemove.Add(coin); // Добавляем монету в список для удаления
+                }
+                else
+                {
+                    sprite.Update(gameTime);
+                }
             }
+
+            foreach (var spriteToRemove in spritesToRemove)
+            {
+                sprites.Remove(spriteToRemove); // Удаляем объекты из коллекции
+            }
+
+
         }
+
 
         public void Draw(SpriteBatch spriteBatch)
         {

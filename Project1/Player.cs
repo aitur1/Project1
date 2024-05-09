@@ -1,16 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace Project1
 {
     internal class Player : Sprite
     {
-        private List<Sprite> collisionGroup;
-        private bool isJumping = false;
+        private readonly List<Sprite> collisionGroup;
+        private bool isJumping;
         private float jumpSpeed = 10f;
-        private float gravity = 0.5f;
+        private const float gravity = 0.5f;
+        private const int movementSpeed = 5;
 
         public Player(Texture2D texture, Vector2 position, List<Sprite> collisionGroup) : base(texture, position)
         {
@@ -21,20 +23,40 @@ namespace Project1
         {
             base.Update(gameTime);
 
+            HandleMovement();
+            HandleCollision();
+            HandleJumping();
+        }
+
+        private void HandleMovement()
+        {
             float changeX = 0;
             if (Keyboard.GetState().IsKeyDown(Keys.D))
-                changeX += 5;
+                changeX += movementSpeed;
             if (Keyboard.GetState().IsKeyDown(Keys.A))
-                changeX -= 5;
+                changeX -= movementSpeed;
             position.X += changeX;
+        }
 
+        private void HandleCollision()
+        {
             foreach (var sprite in collisionGroup)
             {
                 if (sprite != this && sprite.Rect.Intersects(Rect))
                 {
-                    position.X -= changeX;
+                    position.X -= (float)Math.Sign(position.X - sprite.position.X);
+                }
+
+                if (sprite != this && sprite is Coin coin && coin != null && !coin.IsCollected && Rect.Intersects(coin.Rect))
+                {
+                    coin.Collect();
                 }
             }
+        }
+
+        private void HandleJumping()
+        {
+            bool isOnPlatform = IsOnPlatform();
 
             if (!isJumping && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.W)))
             {
@@ -42,19 +64,23 @@ namespace Project1
                 jumpSpeed = 10f;
             }
 
-            if (isJumping || !IsOnPlatform())
+            if (isJumping || !isOnPlatform)
             {
                 position.Y -= jumpSpeed;
                 jumpSpeed -= gravity;
 
                 foreach (var sprite in collisionGroup)
                 {
-                    if (sprite != this && sprite.Rect.Intersects(Rect))
+                    if (sprite != this && sprite is Coin coin && coin != null && !coin.IsCollected && Rect.Intersects(coin.Rect))
                     {
-                        position.Y += jumpSpeed;
+                        coin.Collect();
+                    }
+
+                    if (sprite != this && sprite is Platform platform && platform != null && Rect.Intersects(platform.Rect))
+                    {
+                        position.Y = platform.position.Y - texture.Height;
                         isJumping = false;
                         jumpSpeed = 0;
-                        break;
                     }
                 }
             }
@@ -63,25 +89,17 @@ namespace Project1
                 isJumping = false;
                 jumpSpeed = 0;
             }
-
-
-            foreach (var sprite in collisionGroup)
-            {
-                if (sprite is Coin coin && coin != null && !coin.IsCollected && Rect.Intersects(coin.Rect))
-                {
-                    coin.Collect();
-                }
-            }
         }
 
         private bool IsOnPlatform()
         {
             foreach (var sprite in collisionGroup)
             {
-                if (sprite != this && sprite.Rect.Intersects(Rect) && sprite is Sprite && sprite != this)
+                if (sprite != this && sprite.Rect.Intersects(Rect) && sprite is Platform)
                     return true;
             }
             return false;
         }
     }
 }
+

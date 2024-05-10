@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project1.Sprites
 {
@@ -12,9 +7,11 @@ namespace Project1.Sprites
     {
         private int moveSpeed = 2;
         private bool moveRight = true;
+        private Vector2 initialPosition;
 
         public Enemy(Texture2D texture, Vector2 position) : base(texture, position)
         {
+            initialPosition = position;
         }
 
         public override void Update(GameTime gameTime)
@@ -22,13 +19,13 @@ namespace Project1.Sprites
             if (moveRight)
             {
                 position.X += moveSpeed;
-                if (position.X >= 257)
+                if (position.X >= initialPosition.X + 100)
                     moveRight = false;
             }
             else
             {
                 position.X -= moveSpeed;
-                if (position.X <= 0)
+                if (position.X <= initialPosition.X - 100)
                     moveRight = true;
             }
 

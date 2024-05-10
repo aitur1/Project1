@@ -19,7 +19,7 @@ namespace Project1
         public bool Dead;
 
         private bool canTakeDamage = true;
-        private TimeSpan damageDelay = TimeSpan.FromSeconds(0.5); // Уменьшаем задержку до 0.5 секунды
+        private TimeSpan damageDelay = TimeSpan.FromSeconds(1);
         private TimeSpan lastDamageTime = TimeSpan.Zero;
         private Color playerColor = Color.White;
 
@@ -44,10 +44,9 @@ namespace Project1
                 HandleDamage(gameTime);
             }
 
-            // Обновление таймера для восстановления цвета игрока
             if (gameTime.TotalGameTime - lastDamageTime > damageDelay)
             {
-                playerColor = Color.White; // Возвращаем цвет обратно через 0.5 секунды
+                playerColor = Color.White;
             }
         }
 
@@ -131,7 +130,7 @@ namespace Project1
                 {
                     if (sprite != this && sprite is Enemy && sprite.Rect.Intersects(Rect))
                     {
-                        playerColor = Color.Red; // Меняем цвет игрока на красный
+                        playerColor = Color.Red;
                         GetHit(1);
                         lastDamageTime = gameTime.TotalGameTime;
                         return;

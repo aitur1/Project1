@@ -40,14 +40,13 @@ namespace Project1.Levels
             player = new Player(playerTexture, new Vector2(0, 380), sprites);
 
             sprites.Add(new Platform(platformTexture, new Vector2(0, 441)));
-            sprites.Add(new Platform(platformTexture, new Vector2(230, 441)));
-            sprites.Add(new Platform(platformTexture, new Vector2(460, 441)));
-            sprites.Add(new Platform(platformTexture, new Vector2(690, 441)));
+            sprites.Add(new Platform(platformTexture, new Vector2(240, 441)));
+            sprites.Add(new Platform(platformTexture, new Vector2(480, 441)));
+            sprites.Add(new Platform(platformTexture, new Vector2(720, 441)));
 
-
-            sprites.Add(new Enemy(enemyTexture, new Vector2(500, 400)));
+            sprites.Add(new Enemy(enemyTexture, new Vector2(300, 400)));
             sprites.Add(new Enemy(enemyTexture, new Vector2(600, 400)));
-            sprites.Add(new Enemy(enemyTexture, new Vector2(700, 400)));
+
             sprites.Add(new Coin(coinTexture, new Vector2(100, 370)));
             sprites.Add(new Coin(coinTexture, new Vector2(400, 370)));
             sprites.Add(new Coin(coinTexture, new Vector2(700, 370)));

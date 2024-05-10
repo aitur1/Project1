@@ -45,13 +45,12 @@ namespace Project1.Levels
             sprites.Add(new Platform(platformTexture, new Vector2(690, 291)));
 
 
-            sprites.Add(new Enemy(enemyTexture, new Vector2(500, 400)));
-            sprites.Add(new Enemy(enemyTexture, new Vector2(600, 400)));
-            sprites.Add(new Enemy(enemyTexture, new Vector2(700, 400)));
+            sprites.Add(new Enemy(enemyTexture, new Vector2(340, 350)));
+            sprites.Add(new Enemy(enemyTexture, new Vector2(570, 300)));
 
-            sprites.Add(new Coin(coinTexture, new Vector2(100, 370)));
-            sprites.Add(new Coin(coinTexture, new Vector2(400, 370)));
-            sprites.Add(new Coin(coinTexture, new Vector2(700, 370)));
+            sprites.Add(new Coin(coinTexture, new Vector2(280, 320)));
+            sprites.Add(new Coin(coinTexture, new Vector2(510, 270)));
+            sprites.Add(new Coin(coinTexture, new Vector2(690, 220)));
 
             sprites.Add(player);
         }

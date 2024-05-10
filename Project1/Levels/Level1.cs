@@ -9,13 +9,11 @@ namespace Project1.Levels
     internal class Level1
     {
         private List<Sprite> sprites;
-        private ContentManager _content;
         private Texture2D backgroundTexture;
-
-        private SpriteFont _font;
+        private Texture2D heartTexture;
 
         public Player player { get; private set; }
-        private int playerLives = 3;
+        private int playerLives;
         private int coinsCollected = 0;
         Game1 game;
 
@@ -33,9 +31,10 @@ namespace Project1.Levels
         }
 
 
-        public Level1(Texture2D playerTexture, Texture2D enemyTexture, Texture2D platformTexture, Texture2D coinTexture, Texture2D backgroundTexture)
+        public Level1(Texture2D playerTexture, Texture2D enemyTexture, Texture2D platformTexture, Texture2D coinTexture, Texture2D backgroundTexture, Texture2D heartTexture)
         {
             this.backgroundTexture = backgroundTexture;
+            this.heartTexture = heartTexture;
             sprites = new List<Sprite>();
 
             player = new Player(playerTexture, new Vector2(0, 380), sprites);
@@ -78,18 +77,24 @@ namespace Project1.Levels
                 {
                     sprites.Remove(spriteToRemove);
                 }
+
+                playerLives = player.health;
             }
         }
 
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(backgroundTexture, new Rectangle(0,0, 800, 638), Color.White);
+            spriteBatch.Draw(backgroundTexture, new Rectangle(0, 0, 800, 638), Color.White);
             foreach (var sprite in sprites)
             {
                 sprite.Draw(spriteBatch);
             }
+
+            for (int i = 0; i < playerLives; i++)
+            {
+                spriteBatch.Draw(heartTexture, new Vector2(10 + i * (heartTexture.Width + 5), 10), Color.White);
+            }
         }
     }
 }
-

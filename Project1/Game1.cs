@@ -60,6 +60,7 @@ namespace Project1
 
             Texture2D buttonTexture = Content.Load<Texture2D>("start");
             Texture2D bgTexture = Content.Load<Texture2D>("backgroundTexture");
+            Texture2D heartTexture = Content.Load<Texture2D>("heart");
 
             mainMenu = new MainMenu(bgTexture, buttonTexture);
             mainMenu.StartGameClicked += MainMenu_StartGameClicked;
@@ -69,8 +70,8 @@ namespace Project1
             Texture2D platformTexture = Content.Load<Texture2D>("platform1");
             Texture2D coinTexture = Content.Load<Texture2D>("coin");
 
-            level1 = new Level1(playerTexture, enemyTexture, platformTexture, coinTexture, bgTexture);
-            level2 = new Level2(playerTexture, enemyTexture, platformTexture, coinTexture, bgTexture);
+            level1 = new Level1(playerTexture, enemyTexture, platformTexture, coinTexture, bgTexture, heartTexture);
+            level2 = new Level2(playerTexture, enemyTexture, platformTexture, coinTexture, bgTexture, heartTexture);
 
             //am = new(6, 6, new Vector2(92, 64));
         }

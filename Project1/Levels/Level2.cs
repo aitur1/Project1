@@ -9,13 +9,11 @@ namespace Project1.Levels
     internal class Level2
     {
         private List<Sprite> sprites;
-        private ContentManager _content;
         private Texture2D backgroundTexture;
-
-        private SpriteFont _font;
+        private Texture2D heartTexture;
 
         public Player player { get; private set; }
-        private int playerLives = 3;
+        private int playerLives;
         private int coinsCollected = 0;
         Game1 game;
 
@@ -33,22 +31,24 @@ namespace Project1.Levels
         }
 
 
-        public Level2(Texture2D playerTexture, Texture2D enemyTexture, Texture2D platformTexture, Texture2D coinTexture, Texture2D backgroundTexture)
+        public Level2(Texture2D playerTexture, Texture2D enemyTexture, Texture2D platformTexture, Texture2D coinTexture, Texture2D backgroundTexture, Texture2D heartTexture)
         {
             this.backgroundTexture = backgroundTexture;
+            this.heartTexture = heartTexture;
             sprites = new List<Sprite>();
 
             player = new Player(playerTexture, new Vector2(0, 380), sprites);
 
             sprites.Add(new Platform(platformTexture, new Vector2(0, 441)));
-            sprites.Add(new Platform(platformTexture, new Vector2(230, 441)));
-            sprites.Add(new Platform(platformTexture, new Vector2(460, 441)));
-            sprites.Add(new Platform(platformTexture, new Vector2(690, 441)));
+            sprites.Add(new Platform(platformTexture, new Vector2(230, 391)));
+            sprites.Add(new Platform(platformTexture, new Vector2(460, 341)));
+            sprites.Add(new Platform(platformTexture, new Vector2(690, 291)));
 
 
             sprites.Add(new Enemy(enemyTexture, new Vector2(500, 400)));
             sprites.Add(new Enemy(enemyTexture, new Vector2(600, 400)));
             sprites.Add(new Enemy(enemyTexture, new Vector2(700, 400)));
+
             sprites.Add(new Coin(coinTexture, new Vector2(100, 370)));
             sprites.Add(new Coin(coinTexture, new Vector2(400, 370)));
             sprites.Add(new Coin(coinTexture, new Vector2(700, 370)));
@@ -78,6 +78,8 @@ namespace Project1.Levels
                 {
                     sprites.Remove(spriteToRemove);
                 }
+
+                playerLives = player.health;
             }
         }
 
@@ -88,6 +90,11 @@ namespace Project1.Levels
             foreach (var sprite in sprites)
             {
                 sprite.Draw(spriteBatch);
+            }
+
+            for (int i = 0; i < playerLives; i++)
+            {
+                spriteBatch.Draw(heartTexture, new Vector2(10 + i * (heartTexture.Width + 5), 10), Color.White);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace Project1.Sprites
             if (moveRight)
             {
                 position.X += moveSpeed;
-                if (position.X >= 700)
+                if (position.X >= 257)
                     moveRight = false;
             }
             else
@@ -39,7 +39,6 @@ namespace Project1.Sprites
         {
             if (otherSprite is Player)
             {
-                // Игрок исчезает при столкновении с врагом
                 otherSprite.IsRemoved = true;
             }
         }

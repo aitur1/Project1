@@ -19,9 +19,9 @@ namespace Project1
         public bool Dead;
 
         private bool canTakeDamage = true;
-        private TimeSpan damageDelay = TimeSpan.FromSeconds(1);
+        private TimeSpan damageDelay = TimeSpan.FromSeconds(0.5); // Уменьшаем задержку до 0.5 секунды
         private TimeSpan lastDamageTime = TimeSpan.Zero;
-
+        private Color playerColor = Color.White;
 
         public Player(Texture2D texture, Vector2 position, List<Sprite> collisionGroup) : base(texture, position)
         {
@@ -31,7 +31,6 @@ namespace Project1
             healthMax = 3;
             health = healthMax;
         }
-
 
         public override void Update(GameTime gameTime)
         {
@@ -44,8 +43,13 @@ namespace Project1
                 HandleJumping();
                 HandleDamage(gameTime);
             }
-        }
 
+            // Обновление таймера для восстановления цвета игрока
+            if (gameTime.TotalGameTime - lastDamageTime > damageDelay)
+            {
+                playerColor = Color.White; // Возвращаем цвет обратно через 0.5 секунды
+            }
+        }
 
         private void HandleMovement()
         {
@@ -72,8 +76,6 @@ namespace Project1
                 }
             }
         }
-
-
 
         private void HandleJumping()
         {
@@ -111,7 +113,6 @@ namespace Project1
             }
         }
 
-
         private bool IsOnPlatform()
         {
             foreach (var sprite in collisionGroup)
@@ -124,12 +125,13 @@ namespace Project1
 
         private void HandleDamage(GameTime gameTime)
         {
-            if (lastDamageTime == TimeSpan.Zero || (gameTime.TotalGameTime - lastDamageTime) > TimeSpan.FromSeconds(1))
+            if (lastDamageTime == TimeSpan.Zero || (gameTime.TotalGameTime - lastDamageTime) > damageDelay)
             {
                 foreach (var sprite in collisionGroup)
                 {
                     if (sprite != this && sprite is Enemy && sprite.Rect.Intersects(Rect))
                     {
+                        playerColor = Color.Red; // Меняем цвет игрока на красный
                         GetHit(1);
                         lastDamageTime = gameTime.TotalGameTime;
                         return;
@@ -145,6 +147,11 @@ namespace Project1
             {
                 Dead = true;
             }
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, position, playerColor);
         }
     }
 }

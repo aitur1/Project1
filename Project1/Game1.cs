@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Project1.Levels;
+using Project1.Sprites;
 using System;
 using System.Collections.Generic;
 
@@ -19,7 +20,7 @@ namespace Project1
         private Level2 level2;
 
         List<Sprite> sprites;
-        AnimationManager am;
+        //AnimationManager am;
 
         Player player;
         Enemy enemy;
@@ -36,9 +37,6 @@ namespace Project1
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            //_graphics.IsFullScreen = true;
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -61,23 +59,9 @@ namespace Project1
             sprites = new();
 
             Texture2D buttonTexture = Content.Load<Texture2D>("start");
-            //Texture2D platformTexture = Content.Load<Texture2D>("platform1");
-            //Texture2D enemyTexture = Content.Load<Texture2D>("dogx4");
-            //Texture2D playerTexture = Content.Load<Texture2D>("catx4");
+            Texture2D bgTexture = Content.Load<Texture2D>("backgroundTexture");
 
-            //sprites.Add(new Sprite(platformTexture, new Vector2(0, 1000)));
-            //sprites.Add(new Sprite(platformTexture, new Vector2(230, 1000)));
-            //sprites.Add(new Sprite(platformTexture, new Vector2(460, 1000)));
-            //sprites.Add(new Sprite(platformTexture, new Vector2(690, 1000)));
-
-            //sprites.Add(new Enemy(enemyTexture, new Vector2(100, 960)));
-            //sprites.Add(new Enemy(enemyTexture, new Vector2(400, 960)));
-            //sprites.Add(new Enemy(enemyTexture, new Vector2(250, 960)));
-
-            //player = new Player(playerTexture, new Vector2(500, 840), sprites);
-            //sprites.Add(player);
-
-            mainMenu = new MainMenu(buttonTexture);
+            mainMenu = new MainMenu(bgTexture, buttonTexture);
             mainMenu.StartGameClicked += MainMenu_StartGameClicked;
 
             Texture2D playerTexture = Content.Load<Texture2D>("catx4");
@@ -85,15 +69,14 @@ namespace Project1
             Texture2D platformTexture = Content.Load<Texture2D>("platform1");
             Texture2D coinTexture = Content.Load<Texture2D>("coin");
 
-            level1 = new Level1(playerTexture, enemyTexture, platformTexture, coinTexture);
-            level2 = new Level2(playerTexture, enemyTexture, platformTexture);
+            level1 = new Level1(playerTexture, enemyTexture, platformTexture, coinTexture, bgTexture);
+            level2 = new Level2(playerTexture, enemyTexture, platformTexture, coinTexture, bgTexture);
 
             //am = new(6, 6, new Vector2(92, 64));
         }
 
         private void MainMenu_StartGameClicked(object sender, EventArgs e)
         {
-            // Transition to in-game state
             gameState = GameState.InGame;
         }
 
@@ -115,9 +98,7 @@ namespace Project1
                         level1.Update(gameTime);
                         if (level1.PlayerTouchesRightEdge(GraphicsDevice))
                         {
-                            // Увеличение текущего уровня
                             currentLevel++;
-                            // Переключение на следующий уровень
                         }
                     }
                     else if (currentLevel == 2)
@@ -126,26 +107,6 @@ namespace Project1
                     }
                     break;
             }
-
-
-            //List<Sprite> killList = new List<Sprite>();
-            //foreach (var sprite in sprites)
-            //{
-            //    sprite.Update(gameTime);
-            //    if (sprite != player && sprite.Rect.Intersects(player.Rect))
-            //    {
-            //        if (sprite is Enemy)
-            //            killList.Add(player);
-            //        player.OnCollision(sprite);
-            //    }
-            //}
-
-            //foreach (var sprite in killList)
-            //{
-            //    sprites.Remove(sprite);
-            //}
-
-
             //am.Update();
 
             base.Update(gameTime);
@@ -174,17 +135,6 @@ namespace Project1
                     }
                     break;
             }
-
-            //foreach (var sprite in sprites)
-            //{
-            //    sprite.Draw(_spriteBatch);
-            //}
-
-            //_spriteBatch.Draw(
-            //    playerTexture,
-            //    new Rectangle(100, 100, 100, 100),
-            //    am.GetFrame(),
-            //    Color.White);
 
             _spriteBatch.End();
 

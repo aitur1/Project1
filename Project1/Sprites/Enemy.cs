@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1
+namespace Project1.Sprites
 {
     internal class Enemy : Sprite
     {
@@ -22,7 +22,7 @@ namespace Project1
             if (moveRight)
             {
                 position.X += moveSpeed;
-                if (position.X >= 100)
+                if (position.X >= 700)
                     moveRight = false;
             }
             else

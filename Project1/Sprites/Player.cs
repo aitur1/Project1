@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Project1.Sprites;
 using System;
 using System.Collections.Generic;
 
@@ -13,20 +14,38 @@ namespace Project1
         private float jumpSpeed = 10f;
         private const float gravity = 0.5f;
         private const int movementSpeed = 5;
+        public int health;
+        public int healthMax;
+        public bool Dead;
+
+        private bool canTakeDamage = true;
+        private TimeSpan damageDelay = TimeSpan.FromSeconds(1);
+        private TimeSpan lastDamageTime = TimeSpan.Zero;
+
 
         public Player(Texture2D texture, Vector2 position, List<Sprite> collisionGroup) : base(texture, position)
         {
             this.collisionGroup = collisionGroup;
+
+            Dead = false;
+            healthMax = 3;
+            health = healthMax;
         }
+
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
+            if (!Dead)
+            {
+                base.Update(gameTime);
 
-            HandleMovement();
-            HandleCollision();
-            HandleJumping();
+                HandleMovement();
+                HandleCollision();
+                HandleJumping();
+                HandleDamage(gameTime);
+            }
         }
+
 
         private void HandleMovement()
         {
@@ -54,17 +73,19 @@ namespace Project1
             }
         }
 
+
+
         private void HandleJumping()
         {
             bool isOnPlatform = IsOnPlatform();
 
-            if (!isJumping && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.W)))
+            if (!isJumping && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.W)) && isOnPlatform)
             {
                 isJumping = true;
                 jumpSpeed = 10f;
             }
 
-            if (isJumping || !isOnPlatform)
+            if (isJumping)
             {
                 position.Y -= jumpSpeed;
                 jumpSpeed -= gravity;
@@ -84,22 +105,46 @@ namespace Project1
                     }
                 }
             }
-            else
+            else if (!isOnPlatform)
             {
-                isJumping = false;
-                jumpSpeed = 0;
+                position.Y += gravity;
             }
         }
+
 
         private bool IsOnPlatform()
         {
             foreach (var sprite in collisionGroup)
             {
-                if (sprite != this && sprite.Rect.Intersects(Rect) && sprite is Platform)
+                if (sprite.Rect.Intersects(Rect) && sprite is Platform)
                     return true;
             }
             return false;
         }
+
+        private void HandleDamage(GameTime gameTime)
+        {
+            if (lastDamageTime == TimeSpan.Zero || (gameTime.TotalGameTime - lastDamageTime) > TimeSpan.FromSeconds(1))
+            {
+                foreach (var sprite in collisionGroup)
+                {
+                    if (sprite != this && sprite is Enemy && sprite.Rect.Intersects(Rect))
+                    {
+                        GetHit(1);
+                        lastDamageTime = gameTime.TotalGameTime;
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void GetHit(int damage)
+        {
+            health -= damage;
+            if (health <= 0)
+            {
+                Dead = true;
+            }
+        }
     }
 }
-

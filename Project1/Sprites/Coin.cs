@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Project1
+namespace Project1.Sprites
 {
     internal class Coin : Sprite
     {

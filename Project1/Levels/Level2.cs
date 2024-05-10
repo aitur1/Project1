@@ -1,45 +1,90 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Project1.Sprites;
 using System.Collections.Generic;
 
-namespace Project1
+namespace Project1.Levels
 {
     internal class Level2
     {
         private List<Sprite> sprites;
+        private ContentManager _content;
+        private Texture2D backgroundTexture;
+
+        private SpriteFont _font;
+
         public Player player { get; private set; }
+        private int playerLives = 3;
+        private int coinsCollected = 0;
+        Game1 game;
 
         public bool PlayerTouchesRightEdge(GraphicsDevice graphicsDevice)
         {
-            return player.position.X + player.texture.Width >= graphicsDevice.Viewport.Width;
+            if (player != null)
+            {
+                return player.position.X + player.texture.Width >= graphicsDevice.Viewport.Width;
+            }
+            return false;
+        }
+        public int GetCoinsCollected()
+        {
+            return coinsCollected;
         }
 
-        public Level2(Texture2D playerTexture, Texture2D enemyTexture, Texture2D platformTexture)
+
+        public Level2(Texture2D playerTexture, Texture2D enemyTexture, Texture2D platformTexture, Texture2D coinTexture, Texture2D backgroundTexture)
         {
+            this.backgroundTexture = backgroundTexture;
             sprites = new List<Sprite>();
 
-            sprites.Add(new Sprite(platformTexture, new Vector2(0, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(230, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(460, 1000)));
-            sprites.Add(new Sprite(platformTexture, new Vector2(690, 1000)));
+            player = new Player(playerTexture, new Vector2(0, 380), sprites);
 
-            sprites.Add(new Enemy(enemyTexture, new Vector2(100, 960)));
-            sprites.Add(new Enemy(enemyTexture, new Vector2(400, 960)));
-            sprites.Add(new Enemy(enemyTexture, new Vector2(250, 960)));
+            sprites.Add(new Platform(platformTexture, new Vector2(0, 441)));
+            sprites.Add(new Platform(platformTexture, new Vector2(230, 441)));
+            sprites.Add(new Platform(platformTexture, new Vector2(460, 441)));
+            sprites.Add(new Platform(platformTexture, new Vector2(690, 441)));
 
-            sprites.Add(new Player(playerTexture, new Vector2(500, 840), sprites));
+
+            sprites.Add(new Enemy(enemyTexture, new Vector2(500, 400)));
+            sprites.Add(new Enemy(enemyTexture, new Vector2(600, 400)));
+            sprites.Add(new Enemy(enemyTexture, new Vector2(700, 400)));
+            sprites.Add(new Coin(coinTexture, new Vector2(100, 370)));
+            sprites.Add(new Coin(coinTexture, new Vector2(400, 370)));
+            sprites.Add(new Coin(coinTexture, new Vector2(700, 370)));
+
+            sprites.Add(player);
         }
+
+
 
         public void Update(GameTime gameTime)
         {
-            foreach (var sprite in sprites)
+            if (!player.Dead)
             {
-                sprite.Update(gameTime);
+                var spritesToRemove = new List<Sprite>();
+
+                foreach (var sprite in sprites)
+                {
+                    if (sprite is Coin coin && coin.IsCollected)
+                    {
+                        spritesToRemove.Add(coin);
+                        coinsCollected++;
+                    }
+                    sprite.Update(gameTime);
+                }
+
+                foreach (var spriteToRemove in spritesToRemove)
+                {
+                    sprites.Remove(spriteToRemove);
+                }
             }
         }
 
+
         public void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(backgroundTexture, new Rectangle(0, 0, 800, 638), Color.White);
             foreach (var sprite in sprites)
             {
                 sprite.Draw(spriteBatch);

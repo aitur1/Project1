@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1
+namespace Project1.Sprites
 {
-    internal class Button
+    public class Button
     {
         Texture2D texture;
         Vector2 position;

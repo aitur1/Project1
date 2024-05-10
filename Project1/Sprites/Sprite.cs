@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1
+namespace Project1.Sprites
 {
     internal class Sprite
     {
@@ -33,8 +33,8 @@ namespace Project1
         public virtual void Update(GameTime gameTime)
         { }
 
-        public virtual void Draw(SpriteBatch spriteBatch) 
-        { 
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
             spriteBatch.Draw(texture, position, Color.White);
         }
 

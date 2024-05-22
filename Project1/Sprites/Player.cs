@@ -18,7 +18,6 @@ namespace Project1
         public int healthMax;
         public bool Dead;
 
-        private bool canTakeDamage = true;
         private TimeSpan damageDelay = TimeSpan.FromSeconds(1);
         private TimeSpan lastDamageTime = TimeSpan.Zero;
         private Color playerColor = Color.White;
@@ -58,6 +57,8 @@ namespace Project1
             if (Keyboard.GetState().IsKeyDown(Keys.A))
                 changeX -= movementSpeed;
             position.X += changeX;
+
+            position.X = MathHelper.Clamp(position.X, 0, 810 - texture.Width);
         }
 
         private void HandleCollision()
@@ -110,6 +111,8 @@ namespace Project1
             {
                 position.Y += gravity;
             }
+
+            position.Y = MathHelper.Clamp(position.Y, 0, 500 - texture.Height);
         }
 
         private bool IsOnPlatform()

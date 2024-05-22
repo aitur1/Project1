@@ -13,20 +13,15 @@ namespace Project1
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private int currentLevel = 1;
 
         private MainMenu mainMenu;
         private Level1 level1;
         private Level2 level2;
 
+        private int currentLevel = 1;
+
         List<Sprite> sprites;
         //AnimationManager am;
-
-        Player player;
-        Enemy enemy;
-
-        Texture2D playerTexture;
-
         private enum GameState
         {
             MainMenu,

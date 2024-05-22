@@ -11,7 +11,6 @@ namespace Project1.Sprites
 
         public override void Update(GameTime gameTime)
         {
-            // Добавьте код обновления платформы, если это необходимо
         }
     }
 }

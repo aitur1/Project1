@@ -1,100 +1,39 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Project1.Sprites;
-using System.Collections.Generic;
 
 namespace Project1.Levels
 {
-    internal class Level2
+    internal class Level2 : LevelBase
     {
-        private List<Sprite> sprites;
-        private Texture2D backgroundTexture;
-        private Texture2D heartTexture;
-
-        public Player player { get; private set; }
-        private int playerLives;
-        private int coinsCollected = 0;
-        Game1 game;
-
-        public bool PlayerTouchesRightEdge(GraphicsDevice graphicsDevice)
+        public Level2(Texture2D playerTextureLeft, 
+            Texture2D playerTextureRight, 
+            Texture2D enemyTextureRight, 
+            Texture2D enemyTextureLeft, 
+            Texture2D platformTexture, 
+            Texture2D coinTexture, 
+            Texture2D backgroundTexture, 
+            Texture2D heartTexture, 
+            Texture2D buttonRestartTexture,
+            SpriteFont font)
+            : base(playerTextureLeft, 
+                  playerTextureRight, 
+                  backgroundTexture, 
+                  heartTexture, 
+                  buttonRestartTexture,
+                  font)
         {
-            if (player != null)
-            {
-                return player.position.X + player.texture.Width >= graphicsDevice.Viewport.Width;
-            }
-            return false;
-        }
-        public int GetCoinsCollected()
-        {
-            return coinsCollected;
-        }
+            AddSprite(new Platform(platformTexture, new Vector2(0, 441)));
+            AddSprite(new Platform(platformTexture, new Vector2(230, 391)));
+            AddSprite(new Platform(platformTexture, new Vector2(460, 341)));
+            AddSprite(new Platform(platformTexture, new Vector2(690, 291)));
 
+            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(340, 350)));
+            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(570, 300)));
 
-        public Level2(Texture2D playerTexture, Texture2D enemyTexture, Texture2D platformTexture, Texture2D coinTexture, Texture2D backgroundTexture, Texture2D heartTexture)
-        {
-            this.backgroundTexture = backgroundTexture;
-            this.heartTexture = heartTexture;
-            sprites = new List<Sprite>();
-
-            player = new Player(playerTexture, new Vector2(0, 380), sprites);
-
-            sprites.Add(new Platform(platformTexture, new Vector2(0, 441)));
-            sprites.Add(new Platform(platformTexture, new Vector2(230, 391)));
-            sprites.Add(new Platform(platformTexture, new Vector2(460, 341)));
-            sprites.Add(new Platform(platformTexture, new Vector2(690, 291)));
-
-
-            sprites.Add(new Enemy(enemyTexture, new Vector2(340, 350)));
-            sprites.Add(new Enemy(enemyTexture, new Vector2(570, 300)));
-
-            sprites.Add(new Coin(coinTexture, new Vector2(280, 320)));
-            sprites.Add(new Coin(coinTexture, new Vector2(510, 270)));
-            sprites.Add(new Coin(coinTexture, new Vector2(690, 220)));
-
-            sprites.Add(player);
-        }
-
-
-
-        public void Update(GameTime gameTime)
-        {
-            if (!player.Dead)
-            {
-                var spritesToRemove = new List<Sprite>();
-
-                foreach (var sprite in sprites)
-                {
-                    if (sprite is Coin coin && coin.IsCollected)
-                    {
-                        spritesToRemove.Add(coin);
-                        coinsCollected++;
-                    }
-                    sprite.Update(gameTime);
-                }
-
-                foreach (var spriteToRemove in spritesToRemove)
-                {
-                    sprites.Remove(spriteToRemove);
-                }
-
-                playerLives = player.health;
-            }
-        }
-
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(backgroundTexture, new Rectangle(0, 0, 800, 638), Color.White);
-            foreach (var sprite in sprites)
-            {
-                sprite.Draw(spriteBatch);
-            }
-
-            for (int i = 0; i < playerLives; i++)
-            {
-                spriteBatch.Draw(heartTexture, new Vector2(10 + i * (heartTexture.Width + 5), 10), Color.White);
-            }
+            AddSprite(new Coin(coinTexture, new Vector2(280, 320)));
+            AddSprite(new Coin(coinTexture, new Vector2(510, 270)));
+            AddSprite(new Coin(coinTexture, new Vector2(690, 220)));
         }
     }
 }

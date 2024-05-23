@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project1.Sprites
 {
-    public class Button
+    public class ButtonStart
     {
         Texture2D texture;
         Vector2 position;
@@ -25,7 +25,7 @@ namespace Project1.Sprites
             set { isVisible = value; }
         }
 
-        public Button(Texture2D texture, Vector2 position)
+        public ButtonStart(Texture2D texture, Vector2 position)
         {
             this.texture = texture;
             this.position = position;

@@ -15,5 +15,9 @@ namespace Project1.Sprites
         {
             IsCollected = true;
         }
+        public void Reset()
+        {
+            IsCollected = false;
+        }
     }
 }

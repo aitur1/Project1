@@ -8,10 +8,14 @@ namespace Project1.Sprites
         private int moveSpeed = 2;
         private bool moveRight = true;
         private Vector2 initialPosition;
+        private Texture2D textureRight;
+        private Texture2D textureLeft;
 
-        public Enemy(Texture2D texture, Vector2 position) : base(texture, position)
+        public Enemy(Texture2D textureRight, Texture2D textureLeft, Vector2 position) : base(textureRight, position)
         {
             initialPosition = position;
+            this.textureRight = textureRight;
+            this.textureLeft = textureLeft;
         }
 
         public override void Update(GameTime gameTime)
@@ -19,13 +23,15 @@ namespace Project1.Sprites
             if (moveRight)
             {
                 position.X += moveSpeed;
-                if (position.X >= initialPosition.X + 100)
+                texture = textureRight;
+                if (position.X >= initialPosition.X + 90)
                     moveRight = false;
             }
             else
             {
                 position.X -= moveSpeed;
-                if (position.X <= initialPosition.X - 100)
+                texture = textureLeft;
+                if (position.X <= initialPosition.X - 90)
                     moveRight = true;
             }
 
@@ -38,6 +44,13 @@ namespace Project1.Sprites
             {
                 otherSprite.IsRemoved = true;
             }
+        }
+
+        public void Reset()
+        {
+            position = initialPosition;
+            moveRight = true;
+            texture = textureRight;
         }
     }
 }

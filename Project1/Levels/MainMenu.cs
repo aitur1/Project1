@@ -9,14 +9,14 @@ namespace Project1.Levels
     internal class MainMenu
     {
         private Texture2D backgroundTexture;
-        private Button startButton;
+        private ButtonStart startButton;
 
         public event EventHandler StartGameClicked;
 
         public MainMenu(Texture2D backgroundTexture, Texture2D buttonTexture)
         {
             this.backgroundTexture = backgroundTexture;
-            startButton = new Button(buttonTexture, new Vector2(350, 120));
+            startButton = new ButtonStart(buttonTexture, new Vector2(350, 120));
             startButton.Click += StartButton_Click;
         }
 

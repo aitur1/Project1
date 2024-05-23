@@ -51,6 +51,8 @@ namespace Project1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            SpriteFont font = Content.Load<SpriteFont>("scoreFont");
+
             sprites = new();
 
             Texture2D buttonTexture = Content.Load<Texture2D>("start");
@@ -60,13 +62,17 @@ namespace Project1
             mainMenu = new MainMenu(bgTexture, buttonTexture);
             mainMenu.StartGameClicked += MainMenu_StartGameClicked;
 
-            Texture2D playerTexture = Content.Load<Texture2D>("catx4");
-            Texture2D enemyTexture = Content.Load<Texture2D>("dogx4");
+            Texture2D playerTextureLeft = Content.Load<Texture2D>("cat_left");
+            Texture2D playerTextureRight = Content.Load<Texture2D>("cat_right");
+            Texture2D enemyTextureRight = Content.Load<Texture2D>("dog_right");
+            Texture2D enemyTextureLeft = Content.Load<Texture2D>("dog_left");
             Texture2D platformTexture = Content.Load<Texture2D>("platform1");
             Texture2D coinTexture = Content.Load<Texture2D>("coin");
+            Texture2D buttonRestartTexture = Content.Load<Texture2D>("restart");
 
-            level1 = new Level1(playerTexture, enemyTexture, platformTexture, coinTexture, bgTexture, heartTexture);
-            level2 = new Level2(playerTexture, enemyTexture, platformTexture, coinTexture, bgTexture, heartTexture);
+
+            level1 = new Level1(playerTextureLeft, playerTextureRight, enemyTextureRight, enemyTextureLeft, platformTexture, coinTexture, bgTexture, heartTexture, buttonRestartTexture, font);
+            level2 = new Level2(playerTextureLeft, playerTextureRight, enemyTextureRight, enemyTextureLeft, platformTexture, coinTexture, bgTexture, heartTexture, buttonRestartTexture, font);
 
             //am = new(6, 6, new Vector2(92, 64));
         }

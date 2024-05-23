@@ -18,12 +18,19 @@ namespace Project1
         public int healthMax;
         public bool Dead;
 
+        private Texture2D textureLeft; 
+        private Texture2D textureRight;
+        private bool isMovingLeft;
+        private bool isMovingRight;
+
         private TimeSpan damageDelay = TimeSpan.FromSeconds(1);
         private TimeSpan lastDamageTime = TimeSpan.Zero;
         private Color playerColor = Color.White;
 
-        public Player(Texture2D texture, Vector2 position, List<Sprite> collisionGroup) : base(texture, position)
+        public Player(Texture2D textureLeft, Texture2D textureRight, Vector2 position, List<Sprite> collisionGroup) : base(textureRight, position)
         {
+            this.textureLeft = textureLeft;
+            this.textureRight = textureRight;
             this.collisionGroup = collisionGroup;
 
             Dead = false;
@@ -35,11 +42,9 @@ namespace Project1
         {
             if (!Dead)
             {
-                base.Update(gameTime);
-
                 HandleMovement();
+                HandleJumping(gameTime);
                 HandleCollision();
-                HandleJumping();
                 HandleDamage(gameTime);
             }
 
@@ -52,39 +57,35 @@ namespace Project1
         private void HandleMovement()
         {
             float changeX = 0;
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-                changeX += movementSpeed;
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-                changeX -= movementSpeed;
-            position.X += changeX;
+            KeyboardState state = Keyboard.GetState();
 
+            if (state.IsKeyDown(Keys.D))
+            {
+                changeX += movementSpeed;
+                texture = textureRight;
+            }
+            if (state.IsKeyDown(Keys.A))
+            {
+                changeX -= movementSpeed;
+                texture = textureLeft;
+            }
+
+            position.X += changeX;
             position.X = MathHelper.Clamp(position.X, 0, 810 - texture.Width);
         }
 
-        private void HandleCollision()
+        private void HandleJumping(GameTime gameTime)
         {
-            foreach (var sprite in collisionGroup)
-            {
-                if (sprite != this && sprite.Rect.Intersects(Rect))
-                {
-                    position.X -= (float)Math.Sign(position.X - sprite.position.X);
-                }
-
-                if (sprite != this && sprite is Coin coin && coin != null && !coin.IsCollected && Rect.Intersects(coin.Rect))
-                {
-                    coin.Collect();
-                }
-            }
-        }
-
-        private void HandleJumping()
-        {
+            KeyboardState state = Keyboard.GetState();
             bool isOnPlatform = IsOnPlatform();
 
-            if (!isJumping && (Keyboard.GetState().IsKeyDown(Keys.Space) || Keyboard.GetState().IsKeyDown(Keys.W)) && isOnPlatform)
+            if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.W))
             {
-                isJumping = true;
-                jumpSpeed = 10f;
+                if (isOnPlatform && !isJumping)
+                {
+                    isJumping = true;
+                    jumpSpeed = 10f;
+                }
             }
 
             if (isJumping)
@@ -92,35 +93,63 @@ namespace Project1
                 position.Y -= jumpSpeed;
                 jumpSpeed -= gravity;
 
-                foreach (var sprite in collisionGroup)
+                if (jumpSpeed <= 0)
                 {
-                    if (sprite != this && sprite is Coin coin && coin != null && !coin.IsCollected && Rect.Intersects(coin.Rect))
-                    {
-                        coin.Collect();
-                    }
-
-                    if (sprite != this && sprite is Platform platform && platform != null && Rect.Intersects(platform.Rect))
-                    {
-                        position.Y = platform.position.Y - texture.Height;
-                        isJumping = false;
-                        jumpSpeed = 0;
-                    }
+                    isJumping = false;
+                    jumpSpeed = 0;
                 }
             }
             else if (!isOnPlatform)
             {
-                position.Y += gravity;
+                jumpSpeed += gravity; // Применяем гравитацию к скорости падения
+                position.Y += jumpSpeed;
             }
 
             position.Y = MathHelper.Clamp(position.Y, 0, 500 - texture.Height);
+        }
+
+
+        private void HandleCollision()
+        {
+            foreach (var sprite in collisionGroup)
+            {
+                if (sprite != this && sprite.Rect.Intersects(Rect))
+                {
+                    if (sprite is Platform platform)
+                    {
+                        if (position.Y + texture.Height <= platform.position.Y + 1)
+                        {
+                            position.Y = platform.position.Y - texture.Height;
+                        }
+                        else
+                        {
+                            position.X -= (float)Math.Sign(position.X - platform.position.X);
+                        }
+                    }
+
+                    if (sprite is Coin coin && !coin.IsCollected)
+                    {
+                        coin.Collect();
+                    }
+
+                    if (sprite is Enemy)
+                    {
+                        // Handle enemy collision in HandleDamage method
+                    }
+                }
+            }
         }
 
         private bool IsOnPlatform()
         {
             foreach (var sprite in collisionGroup)
             {
-                if (sprite.Rect.Intersects(Rect) && sprite is Platform)
-                    return true;
+                if (sprite is Platform platform)
+                {
+                    Rectangle playerRect = new Rectangle((int)position.X, (int)position.Y + texture.Height, texture.Width, 5);
+                    if (playerRect.Intersects(platform.Rect))
+                        return true;
+                }
             }
             return false;
         }
@@ -149,6 +178,16 @@ namespace Project1
             {
                 Dead = true;
             }
+        }
+
+        public void Reset(Vector2 startPosition)
+        {
+            position = startPosition;
+            health = healthMax;
+            Dead = false;
+            playerColor = Color.White;
+            jumpSpeed = 10f;
+            isJumping = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

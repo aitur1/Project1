@@ -18,7 +18,7 @@ namespace Project1
         public int healthMax;
         public bool Dead;
 
-        private Texture2D textureLeft; 
+        private Texture2D textureLeft;
         private Texture2D textureRight;
         private bool isMovingLeft;
         private bool isMovingRight;
@@ -51,6 +51,11 @@ namespace Project1
             if (gameTime.TotalGameTime - lastDamageTime > damageDelay)
             {
                 playerColor = Color.White;
+            }
+
+            if (position.Y + texture.Height >= 500)
+            {
+                GetHit(health);
             }
         }
 
@@ -101,13 +106,12 @@ namespace Project1
             }
             else if (!isOnPlatform)
             {
-                jumpSpeed += gravity; // Применяем гравитацию к скорости падения
+                jumpSpeed += gravity;
                 position.Y += jumpSpeed;
             }
 
             position.Y = MathHelper.Clamp(position.Y, 0, 500 - texture.Height);
         }
-
 
         private void HandleCollision()
         {
@@ -117,13 +121,13 @@ namespace Project1
                 {
                     if (sprite is Platform platform)
                     {
-                        if (position.Y + texture.Height <= platform.position.Y + 1)
+                        Rectangle playerRect = new Rectangle((int)position.X, (int)position.Y + texture.Height, texture.Width, 1);
+
+                        if (playerRect.Intersects(platform.Rect))
                         {
                             position.Y = platform.position.Y - texture.Height;
-                        }
-                        else
-                        {
-                            position.X -= (float)Math.Sign(position.X - platform.position.X);
+                            jumpSpeed = 0;
+                            isJumping = false;
                         }
                     }
 
@@ -146,7 +150,7 @@ namespace Project1
             {
                 if (sprite is Platform platform)
                 {
-                    Rectangle playerRect = new Rectangle((int)position.X, (int)position.Y + texture.Height, texture.Width, 5);
+                    Rectangle playerRect = new Rectangle((int)position.X, (int)position.Y + texture.Height, texture.Width, 1);
                     if (playerRect.Intersects(platform.Rect))
                         return true;
                 }

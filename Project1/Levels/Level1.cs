@@ -23,17 +23,18 @@ namespace Project1.Levels
                   buttonStartTexture,
                   font)
         {
-            AddSprite(new Platform(platformTexture, new Vector2(0, 441)));
-            AddSprite(new Platform(platformTexture, new Vector2(240, 441)));
-            AddSprite(new Platform(platformTexture, new Vector2(480, 441)));
-            AddSprite(new Platform(platformTexture, new Vector2(720, 441)));
+            AddSprite(new Platform(platformTexture, new Vector2(0, 450)));
+            AddSprite(new Platform(platformTexture, new Vector2(192, 450)));
+            AddSprite(new Platform(platformTexture, new Vector2(384, 450)));
+            AddSprite(new Platform(platformTexture, new Vector2(576, 450)));
+            AddSprite(new Platform(platformTexture, new Vector2(768, 450)));
 
-            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(300, 400)));
-            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(600, 400)));
+            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(300, 410)));
+            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(600, 410)));
 
-            AddSprite(new Coin(coinTexture, new Vector2(100, 370)));
-            AddSprite(new Coin(coinTexture, new Vector2(400, 370)));
-            AddSprite(new Coin(coinTexture, new Vector2(700, 370)));
+            AddSprite(new Coin(coinTexture, new Vector2(100, 380)));
+            AddSprite(new Coin(coinTexture, new Vector2(400, 380)));
+            AddSprite(new Coin(coinTexture, new Vector2(700, 380)));
         }
     }
 }

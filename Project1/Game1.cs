@@ -17,6 +17,7 @@ namespace Project1
         private MainMenu mainMenu;
         private Level1 level1;
         private Level2 level2;
+        private Level3 level3;
 
         private int currentLevel = 1;
 
@@ -73,6 +74,8 @@ namespace Project1
 
             level1 = new Level1(playerTextureLeft, playerTextureRight, enemyTextureRight, enemyTextureLeft, platformTexture, coinTexture, bgTexture, heartTexture, buttonRestartTexture, font);
             level2 = new Level2(playerTextureLeft, playerTextureRight, enemyTextureRight, enemyTextureLeft, platformTexture, coinTexture, bgTexture, heartTexture, buttonRestartTexture, font);
+            level3 = new Level3(playerTextureLeft, playerTextureRight, enemyTextureRight, enemyTextureLeft, platformTexture, coinTexture, bgTexture, heartTexture, buttonRestartTexture, font);
+
 
             //am = new(6, 6, new Vector2(92, 64));
         }
@@ -106,6 +109,14 @@ namespace Project1
                     else if (currentLevel == 2)
                     {
                         level2.Update(gameTime);
+                        if (level2.PlayerTouchesRightEdge(GraphicsDevice))
+                        {
+                            currentLevel++;
+                        }
+                    }
+                    else if (currentLevel == 3)
+                    {
+                        level3.Update(gameTime);
                     }
                     break;
             }
@@ -134,6 +145,10 @@ namespace Project1
                     else if (currentLevel == 2)
                     {
                         level2.Draw(_spriteBatch);
+                    }
+                    else if (currentLevel == 3)
+                    {
+                        level3.Draw(_spriteBatch);
                     }
                     break;
             }

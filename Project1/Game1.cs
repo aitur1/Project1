@@ -15,14 +15,15 @@ namespace Project1
         private SpriteBatch _spriteBatch;
 
         private MainMenu mainMenu;
+        private WinMenu winMenu;
         private Level1 level1;
         private Level2 level2;
         private Level3 level3;
+        private Level4 level4;
 
         private int currentLevel = 1;
 
         List<Sprite> sprites;
-        //AnimationManager am;
         private enum GameState
         {
             MainMenu,
@@ -39,30 +40,21 @@ namespace Project1
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             gameState = GameState.MainMenu;
 
             base.Initialize();
-
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-            SpriteFont font = Content.Load<SpriteFont>("scoreFont");
-
             sprites = new();
 
+            SpriteFont font = Content.Load<SpriteFont>("scoreFont");
             Texture2D buttonTexture = Content.Load<Texture2D>("start");
             Texture2D bgTexture = Content.Load<Texture2D>("backgroundTexture");
             Texture2D heartTexture = Content.Load<Texture2D>("heart");
-
-            mainMenu = new MainMenu(bgTexture, buttonTexture);
-            mainMenu.StartGameClicked += MainMenu_StartGameClicked;
-
             Texture2D playerTextureLeft = Content.Load<Texture2D>("cat_left");
             Texture2D playerTextureRight = Content.Load<Texture2D>("cat_right");
             Texture2D enemyTextureRight = Content.Load<Texture2D>("dog_right");
@@ -71,13 +63,51 @@ namespace Project1
             Texture2D coinTexture = Content.Load<Texture2D>("coin");
             Texture2D buttonRestartTexture = Content.Load<Texture2D>("restart");
 
+            mainMenu = new MainMenu(bgTexture, buttonTexture, font);
+            mainMenu.StartGameClicked += MainMenu_StartGameClicked;
 
-            level1 = new Level1(playerTextureLeft, playerTextureRight, enemyTextureRight, enemyTextureLeft, platformTexture, coinTexture, bgTexture, heartTexture, buttonRestartTexture, font);
-            level2 = new Level2(playerTextureLeft, playerTextureRight, enemyTextureRight, enemyTextureLeft, platformTexture, coinTexture, bgTexture, heartTexture, buttonRestartTexture, font);
-            level3 = new Level3(playerTextureLeft, playerTextureRight, enemyTextureRight, enemyTextureLeft, platformTexture, coinTexture, bgTexture, heartTexture, buttonRestartTexture, font);
+            winMenu = new WinMenu(bgTexture, font);
 
-
-            //am = new(6, 6, new Vector2(92, 64));
+            level1 = new Level1(playerTextureLeft, 
+                playerTextureRight, 
+                enemyTextureRight, 
+                enemyTextureLeft, 
+                platformTexture, 
+                coinTexture, 
+                bgTexture, 
+                heartTexture, 
+                buttonRestartTexture, 
+                font);
+            level2 = new Level2(playerTextureLeft, 
+                playerTextureRight, 
+                enemyTextureRight, 
+                enemyTextureLeft, 
+                platformTexture, 
+                coinTexture, 
+                bgTexture, 
+                heartTexture, 
+                buttonRestartTexture, 
+                font);
+            level3 = new Level3(playerTextureLeft, 
+                playerTextureRight, 
+                enemyTextureRight, 
+                enemyTextureLeft, 
+                platformTexture, 
+                coinTexture, 
+                bgTexture, 
+                heartTexture, 
+                buttonRestartTexture, 
+                font);
+            level4 = new Level4(playerTextureLeft, 
+                playerTextureRight, 
+                enemyTextureRight, 
+                enemyTextureLeft, 
+                platformTexture, 
+                coinTexture, 
+                bgTexture, 
+                heartTexture, 
+                buttonRestartTexture, 
+                font);
         }
 
         private void MainMenu_StartGameClicked(object sender, EventArgs e)
@@ -89,8 +119,6 @@ namespace Project1
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
 
             switch (gameState)
             {
@@ -117,11 +145,21 @@ namespace Project1
                     else if (currentLevel == 3)
                     {
                         level3.Update(gameTime);
+                        if (level3.PlayerTouchesRightEdge(GraphicsDevice))
+                        {
+                            currentLevel++;
+                        }
+                    }
+                    else if (currentLevel == 4)
+                    {
+                        level4.Update(gameTime);
+                        if (level4.PlayerTouchesRightEdge(GraphicsDevice))
+                        {
+                            currentLevel++;
+                        }
                     }
                     break;
             }
-            //am.Update();
-
             base.Update(gameTime);
         }
 
@@ -129,7 +167,6 @@ namespace Project1
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             switch (gameState)
@@ -150,9 +187,16 @@ namespace Project1
                     {
                         level3.Draw(_spriteBatch);
                     }
+                    else if (currentLevel == 4)
+                    {
+                        level4.Draw(_spriteBatch);
+                    }
+                    else if (currentLevel == 5)
+                    {
+                        winMenu.Draw(_spriteBatch);
+                    }
                     break;
             }
-
             _spriteBatch.End();
 
             base.Draw(gameTime);

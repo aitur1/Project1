@@ -138,7 +138,6 @@ namespace Project1
 
                     if (sprite is Enemy)
                     {
-                        // Handle enemy collision in HandleDamage method
                     }
                 }
             }

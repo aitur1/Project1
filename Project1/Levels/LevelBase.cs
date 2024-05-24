@@ -31,7 +31,7 @@ namespace Project1.Levels
             player = new Player(textureLeft, textureRight, new Vector2(0, 380), sprites);
             sprites.Add(player);
 
-            Vector2 buttonPosition = new Vector2(350, 120);
+            Vector2 buttonPosition = new Vector2(350, 210);
             restartButton = new ButtonRestart(buttonRestartTexture, buttonPosition);
         }
 
@@ -102,9 +102,10 @@ namespace Project1.Levels
             if (player.Dead)
             {
                 restartButton.Draw(spriteBatch);
+                spriteBatch.DrawString(font, "ВЫ ПРОРИГРАЛИ", new Vector2(260, 170), Color.Red);
             }
 
-            spriteBatch.DrawString(font, $"MOHET: {coinsCollected}", new Vector2(10, 70), Color.Yellow);
+            spriteBatch.DrawString(font, $"МОНЕТЫ: {coinsCollected}", new Vector2(10, 70), Color.Yellow);
         }
 
         private void RestartLevel()

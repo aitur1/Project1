@@ -14,26 +14,28 @@ namespace Project1.Levels
             Texture2D coinTexture, 
             Texture2D backgroundTexture, 
             Texture2D heartTexture, 
-            Texture2D buttonRestartTexture,
+            Texture2D buttonStartTexture,
             SpriteFont font)
             : base(playerTextureLeft, 
                   playerTextureRight, 
                   backgroundTexture, 
                   heartTexture, 
-                  buttonRestartTexture,
+                  buttonStartTexture,
                   font)
         {
             AddSprite(new Platform(platformTexture, new Vector2(0, 450)));
-            AddSprite(new Platform(platformTexture, new Vector2(230, 400)));
-            AddSprite(new Platform(platformTexture, new Vector2(460, 350)));
-            AddSprite(new Platform(platformTexture, new Vector2(690, 300)));
+            AddSprite(new Platform(platformTexture, new Vector2(192, 450)));
+            AddSprite(new Platform(platformTexture, new Vector2(384, 450)));
+            AddSprite(new Platform(platformTexture, new Vector2(576, 450)));
+            AddSprite(new Platform(platformTexture, new Vector2(768, 450)));
 
-            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(290, 360)));
-            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(520, 310)));
+            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(300, 410)));
+            AddSprite(new Enemy(enemyTextureRight, enemyTextureLeft, new Vector2(600, 410)));
 
-            AddSprite(new Coin(coinTexture, new Vector2(280, 330)));
-            AddSprite(new Coin(coinTexture, new Vector2(510, 280)));
-            AddSprite(new Coin(coinTexture, new Vector2(690, 230)));
+            AddSprite(new Coin(coinTexture, new Vector2(100, 380)));
+            AddSprite(new Coin(coinTexture, new Vector2(400, 380)));
+            AddSprite(new Coin(coinTexture, new Vector2(700, 380)));
         }
     }
 }
+
